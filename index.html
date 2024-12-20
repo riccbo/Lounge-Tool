@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lounge Tool</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            padding-top: 20px;
+            background-color: #1e1e1e;
+        }
+        .content {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+        }
+        h1 {
+            color: white;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 200px);
+            gap: 20px;
+        }
+        .square {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+            border: 2px solid #acacac;
+            cursor: pointer;
+            background-color: grey;
+            position: relative;
+        }
+        .square label {
+            color: rgb(233, 233, 233);
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.893);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        label {
+            color: rgb(233, 233, 233);
+            font-size: 14px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.893);
+            padding: 2px 5px;
+            border-radius: 3px;
+            letter-spacing: 0.05rem;
+        }
+
+
+        .square label.bg1, .bg1 { background: rgb(112, 19, 206);;}
+        .square label.bg2, .bg2 { background: rgb(69, 66, 203);}
+        .square label.bg3, .bg3 { background: rgb(32, 157, 32);}
+        .square label.bg4, .bg4 { background: rgb(201, 99, 59);}
+
+        .square.active1 { background-color: rgb(219, 182, 255); }
+        .square.active2 { background-color: lightblue; }
+        .square.active3 { background-color: lightgreen; }
+        .square.active4 { background-color: lightsalmon; }
+
+        input {
+            font-size: 20px;
+            text-align: center;
+            border: none;
+            outline: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            text-wrap: wrap;
+        }
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: end;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .list-item label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .list-item input {
+            color: white;
+            text-align: left;
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 150px;
+        }
+        .list-item button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .list-item button:hover {
+            background: #d32f2f;
+        }
+        .clear-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .clear-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Riccardo Bove | Lounge Tool</h1>
+    <div class="content">
+        <div class="container">
+            <div class="square" onclick="makeEditable(this, 'active1')">
+                <label class="bg1">Partyraum</label>
+                <input type="text" onclick="event.stopPropagation()" placeholder="Gruppenname" oninput="updateColor(this, 'active1', 0)">
+            </div>
+            <div class="square" onclick="makeEditable(this, 'active2')">
+                <label class="bg2">Hinten</label>
+                <input type="text" onclick="event.stopPropagation()" placeholder="Gruppenname" oninput="updateColor(this, 'active2', 1)">
+            </div>
+            <div class="square" onclick="makeEditable(this, 'active3')">
+                <label class="bg3">Klein</label>
+                <input type="text" onclick="event.stopPropagation()" placeholder="Gruppenname" oninput="updateColor(this, 'active3', 2)">
+            </div>
+            <div class="square" onclick="makeEditable(this, 'active4')">
+                <label class="bg4">Orange</label>
+                <input type="text" onclick="event.stopPropagation()" placeholder="Gruppenname" oninput="updateColor(this, 'active4', 3)">
+            </div>
+        </div>
+    
+        <div class="list">
+            <div class="list-item">
+                <label for="list-input-0" class="bg1">Partyraum:</label>
+                <input id="list-input-0" type="text" placeholder="Gruppenname" oninput="syncSquareInput(0, this.value)">
+                <button onclick="clearSingleInput(0)">x</button>
+            </div>
+            <div class="list-item">
+                <label for="list-input-1" class="bg2">Hinten:</label>
+                <input id="list-input-1" type="text" placeholder="Gruppenname" oninput="syncSquareInput(1, this.value)">
+                <button onclick="clearSingleInput(1)">x</button>
+            </div>
+            <div class="list-item">
+                <label for="list-input-2" class="bg3">Klein:</label>
+                <input id="list-input-2" type="text" placeholder="Gruppenname" oninput="syncSquareInput(2, this.value)">
+                <button onclick="clearSingleInput(2)">x</button>
+            </div>
+            <div class="list-item">
+                <label for="list-input-3" class="bg4">Orange:</label>
+                <input id="list-input-3" type="text" placeholder="Gruppenname" oninput="syncSquareInput(3, this.value)">
+                <button onclick="clearSingleInput(3)">x</button>
+            </div>
+        </div>
+    
+        <button class="clear-button" onclick="clearAllInputs()">Alle löschen</button>
+    </div>
+    
+
+    <script>
+        function syncListInput(index, value) {
+            const listInput = document.getElementById(`list-input-${index}`);
+            listInput.value = value;
+        }
+
+        function syncSquareInput(index, value) {
+            const container = document.querySelector('.container');
+            const squareInput = container.children[index].querySelector('input');
+            squareInput.value = value;
+            const className = `active${index + 1}`;
+            if (value.trim() !== "") {
+                container.children[index].classList.add(className);
+            } else {
+                container.children[index].classList.remove(className);
+            }
+        }
+
+        function updateColor(input, className, index) {
+            const square = input.parentElement;
+            if (input.value.trim() !== "") {
+                square.classList.add(className);
+            } else {
+                square.classList.remove(className);
+            }
+            syncListInput(index, input.value); // Synchronize with the list
+        }
+
+        function makeEditable(square, className) {
+            const input = square.querySelector('input');
+            input.focus();
+        }
+
+        function clearAllInputs() {
+            const container = document.querySelector('.container');
+            const list = document.querySelector('.list');
+
+            for (let i = 0; i < container.children.length; i++) {
+                const squareInput = container.children[i].querySelector('input');
+                const listInput = list.children[i].querySelector('input');
+                squareInput.value = "";
+                listInput.value = "";
+                container.children[i].className = "square"; // Reset classes
+            }
+        }
+
+        function clearSingleInput(index) {
+            const container = document.querySelector('.container');
+            const list = document.querySelector('.list');
+
+            const squareInput = container.children[index].querySelector('input');
+            const listInput = list.children[index].querySelector('input');
+
+            squareInput.value = "";
+            listInput.value = "";
+            container.children[index].className = "square"; // Reset classes
+        }
+    </script>
+</body>
+</html>
